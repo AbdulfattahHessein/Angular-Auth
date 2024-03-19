@@ -3,7 +3,7 @@ import { AuthService } from './../../services/auth.service';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { reloadAfterNavigation } from 'src/app/helpers/reload-after-navigation';
+import { reloadEntireApp } from 'src/app/helpers/reload-entire-app';
 
 @Component({
   selector: 'app-login',
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     const returnUrl =
       this.activatedRoute.snapshot.queryParams['returnUrl'] ?? 'Home';
 
-    this.router.navigate([returnUrl]).then(reloadAfterNavigation);
+    this.router.navigate([returnUrl]).then(reloadEntireApp);
   }
 
   ngOnDestroy(): void {

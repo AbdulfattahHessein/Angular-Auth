@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { AuthService } from './../../services/auth.service';
 import { Component, inject } from '@angular/core';
-import { reloadAfterNavigation } from '../../helpers/reload-after-navigation';
+import { reloadEntireApp } from '../../helpers/reload-entire-app';
 
 @Component({
   selector: 'app-navbar',
@@ -23,6 +23,6 @@ export class NavbarComponent {
       .navigate(['/Login'], {
         queryParams: { returnUrl: this.router.routerState.snapshot.url },
       })
-      .then(reloadAfterNavigation);
+      .then(reloadEntireApp);
   }
 }

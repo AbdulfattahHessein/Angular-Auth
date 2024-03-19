@@ -13,61 +13,72 @@ export class AuthService {
 
   private jwtHelper = new JwtHelperService();
 
-  user: UserModel | null = null;
+  get user() {
+    if (this.isAuthenticated()) {
+      return this.jwtHelper.decodeToken<UserModel>(this.currentToken!);
+    }
+    return null;
+  }
   get isLoggedIn$() {
     return this._isLoggedIn$.asObservable();
   }
-  get token() {
+  get currentToken() {
     return localStorage.getItem(API.TOKEN_NAME);
   }
 
   constructor(private apiService: ApiService) {
-    // console.log('try decode', this.decodeToken(this.token!));
-
-    this.user = this.decodeToken(this.token!);
-
-    this._isLoggedIn$.next(this.isAuthenticated());
+    this.updateLoggedInStatus(this.isAuthenticated());
   }
 
   isAuthenticated() {
-    return !!this.token && !!this.decodeToken(this.token);
-  }
-  isTokenExpired() {
-    return this.jwtHelper.isTokenExpired(this.token);
+    return !!this.currentToken && this.isTokenValid(this.currentToken);
   }
 
   login(username: string, password: string) {
     return this.apiService.login(username, password).pipe(
       tap((response) => {
         if (response.success) {
-          this._isLoggedIn$.next(true);
-          localStorage.setItem(API.TOKEN_NAME, response.token!);
-          this.user = this.decodeToken(response.token!);
+          this.updateLoggedInStatus(true);
+          this.saveToken(response.token!);
         }
       })
     );
   }
 
   logout() {
-    this._isLoggedIn$.next(false);
-    localStorage.removeItem(API.TOKEN_NAME);
+    this.updateLoggedInStatus(false);
+    this.deleteCurrentToken();
   }
-  private decodeToken<T>(token: string): T | null {
-    try {
-      return token ? this.jwtHelper.decodeToken<T>(token) : null;
-    } catch (error) {
-      console.error('Current token is not valid');
-      this.logout();
-      return null;
-    }
+  isSessionExpired() {
+    return this.currentToken ? this.isTokenExpired(this.currentToken) : false;
   }
   hasRoles(roles: string[]) {
     return roles.some((r) => this.user?.roles.includes(r));
   }
-}
 
-export interface LoginResponse {
-  success: boolean;
-  message: string;
-  token: string | null;
+  //#region private methods
+  private updateLoggedInStatus(isLoggedIn: boolean) {
+    this._isLoggedIn$.next(isLoggedIn);
+  }
+  private saveToken(token: string) {
+    localStorage.setItem(API.TOKEN_NAME, token);
+  }
+  private deleteCurrentToken() {
+    localStorage.removeItem(API.TOKEN_NAME);
+  }
+  private isTokenExpired(token: string) {
+    return this.jwtHelper.isTokenExpired(token);
+  }
+  private canDecodeToken(token: string) {
+    try {
+      this.jwtHelper.decodeToken(token);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+  private isTokenValid(token: string) {
+    return this.canDecodeToken(token) && !this.isTokenExpired(token);
+  }
+  //#endregion
 }

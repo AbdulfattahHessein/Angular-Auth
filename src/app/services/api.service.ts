@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API } from '../constants/api-constants';
-import { LoginResponse } from './auth.service';
+import { LoginResponse } from '../models/LoginResponse';
 
 @Injectable({
   providedIn: 'root',
