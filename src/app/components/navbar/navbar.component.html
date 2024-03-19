@@ -1,0 +1,46 @@
+<nav>
+  <div>
+    <!-- <button routerLink="/Login" *ngIf="!(authService.isLoggedIn$ | async)"> -->
+    <button routerLink="/Login" *ngIf="!isLoggedIn">Login</button>
+
+    &nbsp;&nbsp;
+
+    <button *ngIf="isLoggedIn" (click)="logout()">Logout</button>
+  </div>
+
+  <ul>
+    <li>
+      <a
+        routerLink="/Home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Home</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/About"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >About</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/Contact"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Contact</a
+      >
+    </li>
+    <li *hasRoles="['admin', 'editor']">
+      <a
+        routerLink="/Products"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Products</a
+      >
+    </li>
+    <!-- Add more navigation items as needed -->
+  </ul>
+</nav>

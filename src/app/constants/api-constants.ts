@@ -1,0 +1,5 @@
+export const API = {
+  TOKEN_NAME: 'token',
+  FIXED_TOKEN:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGFoYSBodXNzaW5nIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlcyI6WyJhZG1pbiIsInVzZXIiXSwiZW1haWwiOiJ0YWhhaHVzc2VpbkBnbWFpbC5jb20iLCJleHAiOjE3MTA5NzI3MTV9.LpcZSPlhB5WtowDrmq0yHAQ8MC5xwJPk8ZFHYwN5TbE',
+};
