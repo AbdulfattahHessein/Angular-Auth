@@ -12,17 +12,22 @@ import { reloadEntireApp } from 'src/app/helpers/reload-entire-app';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
-  activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+
+  activatedRoute = inject(ActivatedRoute);
 
   username: string = '';
   password: string = '';
 
   authService = inject(AuthService);
+
   router = inject(Router);
+
   httpClient = inject(HttpClient);
+
   ngOnInit(): void {
     this.isLoggedInSubscription();
   }
+
   isLoggedInSubscription() {
     const sub = this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
       if (isLoggedIn) {
@@ -49,6 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       });
   }
+
   navigateToRedirectUrl() {
     const returnUrl =
       this.activatedRoute.snapshot.queryParams['returnUrl'] ?? 'Home';

@@ -9,8 +9,6 @@ export const hasRolesGuard: CanActivateFn = (route, state) => {
 
   const isAuthorized = authService.hasRoles(roles);
 
-  console.log(isAuthorized);
-
   if (!isAuthorized) {
     alert('You are not authorized to access this page');
     return false;

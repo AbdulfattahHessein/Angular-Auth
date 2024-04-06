@@ -18,12 +18,13 @@ const routes: Routes = [
     path: 'Contact',
     component: ContactComponent,
     canActivate: [isAuthenticatedGuard],
+    data: { Hi: 'Taha' },
   },
   {
     path: 'Products',
     component: ProductsComponent,
     canActivate: [isAuthenticatedGuard, hasRolesGuard],
-    data: { roles: ['admin'] },
+    data: { roles: ['Sudent'] },
   },
   { path: '**', component: NotFoundComponent },
 ];

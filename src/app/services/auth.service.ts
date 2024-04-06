@@ -9,19 +9,28 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root',
 })
 export class AuthService {
-  private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
-
   private jwtHelper = new JwtHelperService();
 
-  get user() {
-    if (this.isAuthenticated()) {
-      return this.jwtHelper.decodeToken<UserModel>(this.currentToken!);
-    }
-    return null;
-  }
+  private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
+
   get isLoggedIn$() {
     return this._isLoggedIn$.asObservable();
   }
+
+  get user() {
+    if (this.isAuthenticated()) {
+      let user = this.jwtHelper.decodeToken<UserModel>(this.currentToken!);
+
+      if (user != null) {
+        //roles: "admin"
+        user.roles = Array.isArray(user?.roles) ? user.roles : [user?.roles]; // roles: ["admin"]
+
+        return user;
+      }
+    }
+    return null;
+  }
+
   get currentToken() {
     return localStorage.getItem(API.TOKEN_NAME);
   }
@@ -29,7 +38,7 @@ export class AuthService {
   constructor(private apiService: ApiService) {
     this.updateLoggedInStatus(this.isAuthenticated());
   }
-
+  //#region public methods
   isAuthenticated() {
     return !!this.currentToken && this.isTokenValid(this.currentToken);
   }
@@ -52,9 +61,11 @@ export class AuthService {
   isSessionExpired() {
     return this.currentToken ? this.isTokenExpired(this.currentToken) : false;
   }
+
   hasRoles(roles: string[]) {
     return roles.some((r) => this.user?.roles.includes(r));
   }
+  //#endregion
 
   //#region private methods
   private updateLoggedInStatus(isLoggedIn: boolean) {

@@ -14,6 +14,10 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HasRolesDirective } from './directives/has-roles.directive';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { errorHandlingInterceptor } from './interceptors/error-handling.interceptor';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -27,8 +31,18 @@ import { HasRolesDirective } from './directives/has-roles.directive';
     NotFoundComponent,
     HasRolesDirective,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule],
-  providers: [provideHttpClient(withInterceptors([authInterceptor]))],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), NgbModule, // ToastrModule added
+  ],
+  providers: [
+    provideHttpClient(
+      withInterceptors([authInterceptor, errorHandlingInterceptor])
+    ),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
