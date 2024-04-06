@@ -24,7 +24,7 @@ const routes: Routes = [
     path: 'Products',
     component: ProductsComponent,
     canActivate: [isAuthenticatedGuard, hasRolesGuard],
-    data: { roles: ['Sudent'] },
+    data: { roles: ['Student'] },
   },
   { path: '**', component: NotFoundComponent },
 ];
